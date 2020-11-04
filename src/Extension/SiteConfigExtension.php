@@ -69,16 +69,12 @@ class SiteConfigExtension extends DataExtension
         ));
         $mfaGraceEnd->addExtraClass('mfa-settings__grace-period');
 
-        $mapFn = function ($groups = []) {
-            $map = [];
-            foreach ($groups as $group) {
-                // Listboxfield values are escaped, use ASCII char instead of &raquo;
-                $map[$group->ID] = $group->getBreadcrumbs(' > ');
-            }
-            asort($map);
-            return $map;
-        };
-        $groupsMap = $mapFn(Group::get());
+        $groupsMap = [];
+        foreach (Group::get() as $group) {
+            // Listboxfield values are escaped, use ASCII char instead of &raquo;
+            $groupsMap[$group->ID] = $group->getBreadcrumbs(' > ');
+        }
+        asort($groupsMap);
 
         $mfaGroupRestrict = ListboxField::create(
             "MFAGroupRestrictions",
@@ -88,7 +84,8 @@ class SiteConfigExtension extends DataExtension
             ->setAttribute(
                 'data-placeholder',
                 _t(__CLASS__ . '.MFA_GROUP_RESTRICTIONS_PLACEHOLDER', 'Click to select group')
-            )->setDescription(_t(
+            )
+            ->setDescription(_t(
                 __CLASS__ . '.MFA_GROUP_RESTRICTIONS_DESCRIPTION',
                 'MFA will only be enabled for members of these selected groups. ' .
                 'If no groups are selected, MFA will be enabled for all users'

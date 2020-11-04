@@ -108,7 +108,7 @@ class EnforcementManager
             return false;
         }
 
-        if (!$this->isUserInMFAEnabledGroup($member)) {
+        if (!$this->isUserInMFAEnabledGroup($member) && !$this->hasCompletedRegistration($member)) {
             return false;
         }
 
@@ -271,7 +271,7 @@ class EnforcementManager
         return true;
     }
 
-    protected function isUserInMFAEnabledGroup(Member $member)
+    protected function isUserInMFAEnabledGroup(Member $member): bool
     {
         /** @var SiteConfig&SiteConfigExtension $siteConfig */
         $siteConfig = SiteConfig::current_site_config();
